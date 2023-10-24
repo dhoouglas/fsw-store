@@ -2,7 +2,7 @@
 const nextConfig = {
     reactStrictMode: true,
     images: {
-      domains: ['https://google.com'], //make it 'your-domain.com'
+      domains: ['https://google.com', 'fsw-store.s3.sa-east-1.amazonaws.com'], 
     },
 }
 
