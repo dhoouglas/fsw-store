@@ -9,11 +9,21 @@ import { ScrollArea } from "./scroll-area";
 import { Button } from "./button";
 import { createCheckout } from "@/actions/checkout";
 import { loadStripe } from "@stripe/stripe-js";
+import { createrOrder } from "@/actions/order";
+import { useSession } from "next-auth/react";
 
 const Cart = () => {
+    const {data} = useSession();
+
     const { products, total, subtotal, totalDiscount } = useContext(CartContext);
 
     const handleFinishPurchaseClick = async () => {
+        if (!data?.user) {
+            return; 
+        }
+
+        await createrOrder(products, (data?.user as any).id);
+
         const checkout = await createCheckout(products);
 
         const stripe = await loadStripe(
@@ -82,7 +92,9 @@ const Cart = () => {
                         <p>R$ {total.toFixed(2)}</p>
                     </div>
 
-                    <Button className="mt-7 font-bold uppercase" onClick={handleFinishPurchaseClick}>Finalizar Compra</Button>
+                    <Button className="mt-7 font-bold uppercase" onClick={handleFinishPurchaseClick}>
+                        Finalizar Compra
+                    </Button>
                 </div>
             )}
         </div>
